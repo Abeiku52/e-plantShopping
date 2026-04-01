@@ -1,20 +1,26 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
-import { increaseQuantity, decreaseQuantity, removeFromCart } from '../redux/CartSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateQuantity, removeItem } from '../redux/CartSlice';
 
 const CartItem = ({ item }) => {
   const dispatch = useDispatch();
+  const { totalAmount, totalItems } = useSelector(state => state.cart);
   
   const handleIncreaseQuantity = () => {
-    dispatch(increaseQuantity(item.id));
+    dispatch(updateQuantity({ itemId: item.id, type: 'increase' }));
   };
   
   const handleDecreaseQuantity = () => {
-    dispatch(decreaseQuantity(item.id));
+    dispatch(updateQuantity({ itemId: item.id, type: 'decrease' }));
   };
   
   const handleRemoveItem = () => {
-    dispatch(removeFromCart(item.id));
+    dispatch(removeItem(item.id));
+  };
+
+  // Function to calculate and display total cart amount
+  const calculateTotalCartAmount = () => {
+    return totalAmount.toFixed(2);
   };
 
   return (
@@ -45,6 +51,7 @@ const CartItem = ({ item }) => {
           </button>
         </div>
         <p className="item-total">Total: ${item.itemTotal.toFixed(2)}</p>
+        <p className="cart-total-amount">Cart Total: ${calculateTotalCartAmount()}</p>
       </div>
       <button 
         className="delete-btn" 

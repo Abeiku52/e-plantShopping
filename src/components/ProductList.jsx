@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { addToCart } from '../redux/CartSlice';
+import { addItem } from '../redux/CartSlice';
 
 // Plant data with 3 categories and 6+ plants each
 const plantsData = {
@@ -163,7 +163,7 @@ const ProductList = () => {
   const cartItems = useSelector(state => state.cart.items);
   
   const handleAddToCart = (plant) => {
-    dispatch(addToCart(plant));
+    dispatch(addItem(plant));
   };
   
   const isPlantInCart = (plantId) => {

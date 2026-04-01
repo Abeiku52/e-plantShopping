@@ -10,7 +10,7 @@ const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
-    addToCart: (state, action) => {
+    addItem: (state, action) => {
       const plant = action.payload;
       const existingItem = state.items.find(item => item.id === plant.id);
       
@@ -26,34 +26,28 @@ const cartSlice = createSlice({
       cartSlice.caseReducers.calculateTotals(state);
     },
     
-    removeFromCart: (state, action) => {
+    removeItem: (state, action) => {
       const itemId = action.payload;
       state.items = state.items.filter(item => item.id !== itemId);
       cartSlice.caseReducers.calculateTotals(state);
     },
     
-    increaseQuantity: (state, action) => {
-      const itemId = action.payload;
+    updateQuantity: (state, action) => {
+      const { itemId, type } = action.payload;
       const item = state.items.find(item => item.id === itemId);
       
       if (item) {
-        item.quantity += 1;
+        if (type === 'increase') {
+          item.quantity += 1;
+        } else if (type === 'decrease' && item.quantity > 1) {
+          item.quantity -= 1;
+        } else if (type === 'decrease' && item.quantity === 1) {
+          // Remove item if quantity becomes 0
+          state.items = state.items.filter(item => item.id !== itemId);
+          cartSlice.caseReducers.calculateTotals(state);
+          return;
+        }
         item.itemTotal = item.quantity * item.plant.price;
-      }
-      
-      cartSlice.caseReducers.calculateTotals(state);
-    },
-    
-    decreaseQuantity: (state, action) => {
-      const itemId = action.payload;
-      const item = state.items.find(item => item.id === itemId);
-      
-      if (item && item.quantity > 1) {
-        item.quantity -= 1;
-        item.itemTotal = item.quantity * item.plant.price;
-      } else if (item && item.quantity === 1) {
-        // Remove item if quantity becomes 0
-        state.items = state.items.filter(item => item.id !== itemId);
       }
       
       cartSlice.caseReducers.calculateTotals(state);
@@ -69,10 +63,9 @@ const cartSlice = createSlice({
 });
 
 export const { 
-  addToCart, 
-  removeFromCart, 
-  increaseQuantity, 
-  decreaseQuantity, 
+  addItem, 
+  removeItem, 
+  updateQuantity, 
   calculateTotals 
 } = cartSlice.actions;
 
