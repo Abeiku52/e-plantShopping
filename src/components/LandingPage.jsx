@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 
 const LandingPage = () => {
   return (
-    <div className="landing-page">
+    <div className="landing-page background-image">
       <div className="landing-content">
-        <h1>Paradise Nursery</h1>
+        <h1>Welcome to Paradise Nursery</h1>
         <p>
           Welcome to Paradise Nursery, where nature meets nurture. 
           Discover our extensive collection of beautiful plants, 
